@@ -26,26 +26,26 @@ For Software:
 Languages used:HTML5,CSS,JavaScript   
 Frameworks used:None   
 Libraries used:None   
-Tools used:VSCode,Git,GitHUb   
-For Hardware:
+Tools used:VSCode,Git,GitHub,Figma   
 
-[List main components]
-[List specifications]
-[List tools required]
-Implementation
-For Software:
+For Hardware:   
+no hardware components used as this is a software project.   
 
-Installation
-[commands]
+Implementation   
+For Software:   
 
-Run
-[commands]
+Installation   
+Clone the repository:   
+git clone <repo-link>   
+
+Run   
+Open 404.html in your browser or use the VS Code Live Server extension for real-time updates.   
 
 Project Documentation
 For Software:
 
-Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name) Add caption explaining what this shows
+Screenshots 
+![1](https://github.com/user-attachments/assets/3f57cc3a-866c-44ea-9085-271265d1776e)
 
 ![Screenshot2](Add screenshot 2 here with proper name) Add caption explaining what this shows
 
