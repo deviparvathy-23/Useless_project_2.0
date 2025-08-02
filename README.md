@@ -35,7 +35,7 @@ No hardware components used as this is a software project.
 
 **Installation**   
 Clone the repository:   
-git clone <repo-link>   
+git clone <https://deviparvathy-23.github.io/Useless_project_2.0/>   
 
 **Run**   
 Open 404.html in your browser or use the VS Code Live Server extension for real-time updates.   
