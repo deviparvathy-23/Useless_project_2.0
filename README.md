@@ -45,37 +45,19 @@ Project Documentation
 For Software:
 
 Screenshots 
-![1](https://github.com/user-attachments/assets/3f57cc3a-866c-44ea-9085-271265d1776e)
+![1](https://github.com/user-attachments/assets/3f57cc3a-866c-44ea-9085-271265d1776e)   
+The initial page of  our Wacky Web which is basically a prank page!!   
 
-![Screenshot2](Add screenshot 2 here with proper name) Add caption explaining what this shows
+![2](https://github.com/user-attachments/assets/fd7c619c-56bf-4aa5-aed1-a8d450f3f110)   
+The official first page of our Wacky Web!! And guess what this is not a prank page!!   
 
-![Screenshot3](Add screenshot 3 here with proper name) Add caption explaining what this shows
+![3](https://github.com/user-attachments/assets/49fb4bb5-3643-40ab-9b74-1b4e6b76b998)   
+The gaming zone !!   
 
-Diagrams
-![Workflow](Add your workflow/architecture diagram here) Add caption explaining your workflow
+Project Demo   
+Video   
+https://github.com/user-attachments/assets/e590eddb-b20f-4edc-aebe-2429d92c8953   
 
-For Hardware:
-
-Schematic & Circuit
-![Circuit](Add your circuit diagram here) Add caption explaining connections
-
-![Schematic](Add your schematic diagram here) Add caption explaining the schematic
-
-Build Photos
-![Components](Add photo of your components here) List out all components shown
-
-![Build](Add photos of build process here) Explain the build steps
-
-![Final](Add photo of final product here) Explain the final build
-
-Project Demo
-Video
-[Add your demo video link here] Explain what the video demonstrates
-
-Additional Demos
-[Add any extra demo materials/links]
-
-Team Contributions
-[Name 1]: [Specific contributions]
-[Name 2]: [Specific contributions]
-[Name 3]: [Specific contributions]
+Team Contributions   
+S Devi Parvathy: Curated the idea of Bubble Danger Zone and Unclickable maze game,Designed the gaming zone interface,The Main Coder   
+Jyothsna Treesa George: Developed the Number Guessing Game and designed the 404 error page and the intro page.   
