@@ -1,27 +1,32 @@
 # Useless_project_2.0
-[Wacky Web] 🎯
-Basic Details
-Team Name: [DJ]
-Team Members
-Team Lead: [Nam] - [College]
-Member 2: [Name] - [College]
-Project Description
-[2-3 lines about what your project does]
+Wacky Web     
+Basic Details  
+Team Name: DJ  
+Team Members  
+Team Lead: Jyothsna Treesa George- RIT Kottayam  
+Member 2: S Devi Parvathy-RIT Kottayam  
 
-The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+Project Description  
+Welcome to Wacky Web, where logic takes a vacation and chaos runs the show. This isn’t your typical website. It’s a digital rabbit hole of unpredictable games, pixelated panic, and lots of "Wait, what just happened?!"  
 
-The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+Built with HTML, CSS, and JavaScript (and a little sprinkle of humour), Wacky Web is a collection of three games that are really simple… but are they??  
 
-Technical Details
-Technologies/Components Used
-For Software:
+The Problem (that doesn't exist)  
+There are a bunch of serious games and apps on the web. But sometimes we might think "Why not give a crazy twist to all those serious stuffs!!"  
+Wacky Web is what happens when a developer chooses chaos over convention.  
+Why make things useful, when you can make them hilariously confusing?  
 
-[Languages used]
-[Frameworks used]
-[Libraries used]
-[Tools used]
+The Solution (that nobody asked for)   
+In a world full of polished apps and purposeful projects, we proudly present…Wacky Web — the solution to a problem nobody had, crafted with way too much enthusiasm.   
+And rightly as Joker said "Why so serious?"  
+
+Technical Details   
+Technologies/Components Used   
+For Software:   
+Languages used:HTML5,CSS,JavaScript   
+Frameworks used:None   
+Libraries used:None   
+Tools used:VSCode,Git,GitHUb   
 For Hardware:
 
 [List main components]
