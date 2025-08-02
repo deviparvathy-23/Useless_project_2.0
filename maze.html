@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hidden Click Maze - Quirky Edition</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #222;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+    user-select: none;
+    transition: background-color 1s ease;
+  }
+  h1 {
+    margin-top: 20px;
+  }
+  #grid {
+    margin-top: 20px;
+    display: grid;
+    gap: 5px;
+    background: #111;
+    border: 3px solid #444;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .cell {
+    background: #555;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .cell.safe {
+    background: #4CAF50; /* green safe spot */
+    animation: none;
+  }
+  .cell.safe.blink {
+    animation: blink 0.6s infinite;
+  }
+  .cell.fake {
+    background: #6FCF97;
+  }
+  .cell.trap {
+    background: #E74C3C; /* red trap */
+  }
+  .cell:hover {
+    background: #888;
+  }
+  #level {
+    margin-top: 15px;
+    font-size: 1.2em;
+  }
+  #message {
+    margin-top: 10px;
+    height: 24px;
+    font-weight: bold;
+    color: #ff5555;
+    min-height: 24px;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Hidden Click Maze - Quirky Edition</h1>
+<div id="level">Level: 1</div>
+<div id="grid"></div>
+<div id="message"></div>
+
+<script>
+  const grid = document.getElementById('grid');
+  const levelDisplay = document.getElementById('level');
+  const message = document.getElementById('message');
+  const body = document.body;
+
+  let level = 1;
+  let gridSize = 5; // initial grid 5x5
+  let safeCell = null;
+  let fakeCells = [];
+  let trapCells = [];
+  let moveInterval = 3000; // safe spot moves every 3 seconds initially
+  let timer;
+  let streak = 0;
+  let lastClickTime = 0;
+
+  const failMessages = [
+    "Oops! Wrong spot! Try again.",
+    "You stepped on a trap! Restarting...",
+    "Not quite! The maze wins this time.",
+    "Missed! Better luck next time.",
+    "Whoops! Click the green, not the red!"
+  ];
+
+  // Simple beep sounds
+  function playBeep(freq = 440, duration = 100) {
+    try {
+      const ctx = new AudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      oscillator.frequency.value = freq;
+      oscillator.type = 'square';
+      oscillator.start();
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+      oscillator.stop(ctx.currentTime + duration / 1000);
+      oscillator.onended = () => ctx.close();
+    } catch {
+      // Ignore if audio not supported
+    }
+  }
+
+  function createGrid(size) {
+    grid.innerHTML = '';
+    grid.style.gridTemplateColumns = `repeat(${size}, 50px)`;
+    grid.style.gridTemplateRows = `repeat(${size}, 50px)`;
+    for (let i = 0; i < size * size; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.addEventListener('click', () => cellClicked(i));
+      grid.appendChild(cell);
+    }
+  }
+
+  function clearSpecialCells() {
+    // Remove classes from old safe, fake, trap cells
+    if (safeCell !== null) grid.children[safeCell]?.classList.remove('safe', 'blink');
+    fakeCells.forEach(i => grid.children[i]?.classList.remove('fake'));
+    trapCells.forEach(i => grid.children[i]?.classList.remove('trap'));
+    fakeCells = [];
+    trapCells = [];
+  }
+
+  function placeSafeCell() {
+    clearSpecialCells();
+
+    safeCell = Math.floor(Math.random() * gridSize * gridSize);
+    grid.children[safeCell].classList.add('safe', 'blink');
+
+    // Remove blink after 1.5s so it's not too distracting
+    setTimeout(() => {
+      grid.children[safeCell]?.classList.remove('blink');
+    }, 1500);
+
+    // Add 1 or 2 fake green spots that vanish quickly
+    const fakeCount = Math.min(2, Math.floor(level / 2));
+    let attempts = 0;
+    while (fakeCells.length < fakeCount && attempts < 20) {
+      let candidate = Math.floor(Math.random() * gridSize * gridSize);
+      if (candidate !== safeCell && !fakeCells.includes(candidate)) {
+        fakeCells.push(candidate);
+        grid.children[candidate].classList.add('fake');
+        // Remove fake after 1.2 seconds
+        setTimeout(() => {
+          grid.children[candidate]?.classList.remove('fake');
+          fakeCells = fakeCells.filter(x => x !== candidate);
+        }, 1200);
+      }
+      attempts++;
+    }
+
+    // Add 1 or 2 trap red spots randomly, disappear after a short time
+    const trapCount = Math.min(2, Math.floor(level / 3));
+    attempts = 0;
+    while (trapCells.length < trapCount && attempts < 20) {
+      let candidate = Math.floor(Math.random() * gridSize * gridSize);
+      if (candidate !== safeCell && !fakeCells.includes(candidate) && !trapCells.includes(candidate)) {
+        trapCells.push(candidate);
+        grid.children[candidate].classList.add('trap');
+        // Remove trap after 1.2 seconds
+        setTimeout(() => {
+          grid.children[candidate]?.classList.remove('trap');
+          trapCells = trapCells.filter(x => x !== candidate);
+        }, 1200);
+      }
+      attempts++;
+    }
+  }
+
+  function cellClicked(index) {
+    if (index === safeCell) {
+      // Correct click
+      playBeep(880, 120);
+      let now = Date.now();
+      if (now - lastClickTime < 2500) {
+        streak++;
+      } else {
+        streak = 1;
+      }
+      lastClickTime = now;
+
+      if (streak > 2) {
+        message.textContent = `🔥 Streak! Bonus Level Up! 🔥`;
+        level += 2; // bonus levels for streak
+        streak = 0;
+      } else {
+        message.textContent = 'Good job! Level up!';
+        level++;
+      }
+      levelDisplay.textContent = `Level: ${level}`;
+
+      // Change background color subtly each level
+      const hue = (level * 35) % 360;
+      body.style.backgroundColor = `hsl(${hue}, 30%, 15%)`;
+
+      // Increase difficulty:
+      if (level % 3 === 0 && gridSize < 10) {
+        gridSize++;
+        createGrid(gridSize);
+      }
+
+      // Faster safe spot moves, min 400ms
+      moveInterval = Math.max(400, moveInterval * 0.85);
+
+      placeSafeCell();
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        placeSafeCell();
+        message.textContent = '';
+      }, moveInterval);
+
+      setTimeout(() => {
+        message.textContent = '';
+      }, 1800);
+
+    } else if (trapCells.includes(index)) {
+      // Clicked trap cell = instant fail
+      playBeep(220, 400);
+      gameOver(true);
+    } else {
+      // Wrong click
+      playBeep(220, 400);
+      gameOver(false);
+    }
+  }
+
+  function gameOver(trap = false) {
+    clearInterval(timer);
+    const msg = trap
+      ? "A trap got you! Starting over..."
+      : failMessages[Math.floor(Math.random() * failMessages.length)];
+    message.textContent = msg;
+    streak = 0;
+
+    setTimeout(() => {
+      resetGame();
+      message.textContent = '';
+    }, 1800);
+  }
+
+  function resetGame() {
+    level = 1;
+    gridSize = 5;
+    moveInterval = 3000;
+    streak = 0;
+    lastClickTime = 0;
+    levelDisplay.textContent = `Level: ${level}`;
+    body.style.backgroundColor = '#222';
+    createGrid(gridSize);
+    placeSafeCell();
+    timer = setInterval(() => {
+      placeSafeCell();
+      message.textContent = '';
+    }, moveInterval);
+  }
+
+  // Start the game
+  resetGame();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Arcade - Choose Your Adventure!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            color: white;
+            text-shadow: 
+                0 0 20px rgba(255,255,255,0.8),
+                0 0 40px rgba(255,255,255,0.6),
+                0 0 60px rgba(255,255,255,0.4);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 
+                    0 0 20px rgba(255,255,255,0.8),
+                    0 0 40px rgba(255,255,255,0.6),
+                    0 0 60px rgba(255,255,255,0.4);
+            }
+            to { 
+                text-shadow: 
+                    0 0 30px rgba(255,255,255,1),
+                    0 0 60px rgba(255,255,255,0.8),
+                    0 0 90px rgba(255,255,255,0.6);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.9);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.2),
+                0 0 20px rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .game-card:hover::before {
+            animation: shimmer 1.5s ease infinite;
+            opacity: 1;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.3),
+                0 0 30px rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .game-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .number-game .game-icon {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        }
+
+        .bubble-game .game-icon {
+            background: linear-gradient(45deg, #00d2d3, #54a0ff);
+        }
+
+        .rhyme-game .game-icon {
+            background: linear-gradient(45deg, #5f27cd, #a55eea);
+        }
+
+        .game-card:hover .game-icon {
+            transform: rotateY(360deg);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .game-description {
+            color: #7f8c8d;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .game-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .game-features li {
+            background: rgba(52, 152, 219, 0.1);
+            margin: 8px 0;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #34495e;
+            border-left: 4px solid #3498db;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 184, 148, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 184, 148, 0.6);
+        }
+
+        .play-button:active {
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 60%; left: 85%; animation-delay: 2s; }
+        .shape:nth-child(3) { top: 80%; left: 20%; animation-delay: 4s; }
+        .shape:nth-child(4) { top: 40%; left: 70%; animation-delay: 1s; }
+        .shape:nth-child(5) { top: 10%; left: 60%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .game-card {
+                padding: 25px;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-float 4s linear infinite;
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="floating-shapes">
+        <div class="shape">🎮</div>
+        <div class="shape">🎯</div>
+        <div class="shape">🎪</div>
+        <div class="shape">⭐</div>
+        <div class="shape">🎨</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">WACKY WEB </h1>
+            <p class="subtitle">Where Strange Games Come to Life!</p>
+            <p class="tagline">Three mysterious games, unexpected surprises!</p>
+        </div>
+
+        <div class="games-grid">
+            <!-- Mystery Number Game -->
+            <div class="game-card number-game" onclick="selectGame('number')">
+                <div class="game-icon">🎲</div>
+                <h2 class="game-title">Lucky Number Mystery</h2>
+                <p class="game-description">
+                    Pick a number, any number... but choose wisely! Something magical happens when you guess right!
+                </p>
+                <ul class="game-features">
+                    <li>🔮 Mysterious random selections</li>
+                    <li>🎁 Hidden surprises await</li>
+                    <li>✨ Magic happens with correct guesses</li>
+                    <li>🤔 Simple concept, big rewards</li>
+                </ul>
+                <button class="play-button">🎲 Take a Chance!</button>
+            </div>
+
+            <!-- Mini Explosive Grid Game -->
+            <div class="game-card bubble-game" onclick="selectGame('bubble')">
+                <div class="game-icon">💣</div>
+                <h2 class="game-title">Bubble Danger Zone</h2>
+                <p class="game-description">
+                    Not your ordinary bubble popping! Some bubbles hide secrets... and some hide surprises you don't want to find!
+                </p>
+                <ul class="game-features">
+                    <li>💥 Hidden dangers lurk beneath</li>
+                    <li>🕵️ Detective skills required</li>
+                    <li>🎯 Strategy meets luck</li>
+                    <li>🧠 Think before you pop!</li>
+                </ul>
+                <button class="play-button">💣 Risk It All!</button>
+            </div>
+
+           <div class="game-card maze-game" onclick="selectGame('maze')">
+    <div class="game-icon">🌀</div>
+    <h2 class="game-title">The Unclickable Maze</h2>
+    <p class="game-description">
+        Navigate a sneaky maze where buttons dodge your clicks! Outsmart the UI and catch the uncatchable.
+    </p>
+    <ul class="game-features">
+        <li>🧠 Tricky, fast-moving buttons</li>
+        <li>💡 Test your precision and patience</li>
+        <li>🚫 Illusions and distractions ahead</li>
+        <li>🏁 Catch the button to win!</li>
+    </ul>
+    <button class="play-button">🌀 Start the Chase!</button>
+</div>
+        </div>
+
+        <div class="footer">
+            <p>✨ Welcome to the wackiest corner of the web ✨</p>
+            <p>Choose your mystery and discover what awaits!</p>
+        </div>
+    </div>
+
+    <script>
+        // Create twinkling stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 100;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Create floating particles
+        function createParticles() {
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 4000);
+            }, 300);
+        }
+
+        // Game selection function
+        function selectGame(gameType) {
+            const button = event.currentTarget.querySelector('.play-button');
+            const card = event.currentTarget;
+            
+            // Add click animation
+            card.style.transform = 'translateY(-15px) scale(0.98)';
+            button.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                card.style.transform = 'translateY(-15px) scale(1.05)';
+                button.style.transform = 'scale(1)';
+                
+                // Here you would redirect to the actual game
+                // For now, just show an alert
+                switch(gameType) {
+                    case 'number':
+                        window.location.href ='number.html';
+                        break;
+                    case 'bubble':
+                        //alert('💣 Loading Bubble Danger Zone!\n\nCareful where you click... some bubbles have secrets! Good luck, detective!');
+                        window.location.href = 'bubble wrap.html';
+                        break;
+                    case 'maze':
+                        //alert('🎭 Loading Word Swap Magic!\n\nTime to transform sentences with rhyming wizardry! Let the wordplay begin!');
+                        window.location.href = 'maze.html';
+                        break;
+                }
+            }, 100);
+        }
+
+        // Add hover sound effects (using Web Audio API)
+        function playHoverSound() {
+            // Create a simple beep sound
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        // Add hover effects with sound
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            createParticles();
+            
+            const gameCards = document.querySelectorAll('.game-card');
+            gameCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    try {
+                        playHoverSound();
+                    } catch (e) {
+                        // Sound permission not granted, that's okay
+                    }
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const gameCards = document.querySelectorAll('.game-card');
+            if (e.key >= '1' && e.key <= '3') {
+                const index = parseInt(e.key) - 1;
+                if (gameCards[index]) {
+                    gameCards[index].click();
+                }
+            }
+        });
+
+        // Add click ripple effect
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    </script>
+
+    <style>
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html>

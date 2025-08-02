@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #0f2027;
+      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .logo {
+      width: 180px;
+      margin: 20px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 40px;
+      z-index: 2;
+    }
+
+    .text-box {
+      flex: 1;
+      font-size: 1.8rem;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .mascot {
+      width: 450px;
+      height: 450px;
+      object-fit: contain;
+      margin: 0 20px;
+    }
+
+    .click-message {
+      font-size: 24px;
+      margin-bottom: 40px;
+      animation: pulse 2s infinite;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Background particle animation */
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-10vh); }
+    }
+  </style>
+</head>
+<body onclick="goToGames()">
+
+  <img class="logo" src="WackyWeb.jpeg.jpg" alt="Logo" />
+
+  <div class="container">
+    <div class="text-box">🌟 Welcome to the Jungle of Joyful Bugs!</div>
+    <img class="mascot" src="jk.png" alt="Mascot" />
+    <div class="text-box">✨ Dive into the world where code meets chaos!</div>
+  </div>
+
+  <div class="click-message">👆 Click anywhere to continue...</div>
+
+  <div class="particles" id="particles"></div>
+
+  <script>
+    function goToGames() {
+      window.location.href = "games.html";
+    }
+
+    // Generate particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      const size = Math.random() * 6 + 4;
+      particle.classList.add('particle');
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.animationDuration = `${5 + Math.random() * 5}s`;
+      particle.style.animationDelay = `${Math.random() * 5}s`;
+      particlesContainer.appendChild(particle);
+    }
+  </script>
+
+</body>
+</html>

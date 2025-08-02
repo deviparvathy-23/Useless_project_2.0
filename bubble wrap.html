@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deadly Bubble Wrap</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #213838;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(6, 50px);
+      gap: 15px;
+      justify-content: center;
+      margin-top: 2rem;
+      background-image:url('background.png') ;
+    }
+    .bubble-wrap-bg {
+      background-image: url('background.png');
+      background-size: 200px;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 10px 20px rgba(234, 227, 227, 0.871);
+      margin: 20px auto;
+    }
+    .bubble {
+  width: 60px;
+  height: 60px;
+  background-image: url('bubble.png'); /* path to your bubble image */
+  background-size: cover;
+  background-position: center;
+  border: none; /* remove border if not needed */
+  border-radius: 50%; /* keep if your image is round */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+    .popped {
+      background-image: url('popped.png');
+      cursor: not-allowed;
+    }
+    .trap {
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem; /* adjust size to fill the circle */
+  border-radius: 50%; /* makes it a circle */
+  width: 50px; /* set your desired circle size */
+  height: 50px;
+  background-color: rgb(223, 220, 220);
+  user-select: none;
+}
+    #message {
+      margin-top: 1.5rem;
+      font-size: 1.3rem;
+    }
+    #restart {
+      margin-top: 1rem;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: #00bfff;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+    #restart:hover {
+      background: #008ecc;
+    }
+    .bubble.popped {
+  animation: pop 0.2s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(0.9); }
+}
+
+  </style>
+</head>
+<body>
+
+<h1>💥 Bubble Wrap: Deadly Edition 💥</h1>
+<p>Pop the bubbles... but beware — one wrong pop and you're out!</p>
+
+<div id="grid"></div>
+<div id="message"></div>
+<button id="restart">Restart Game</button>
+
+<!-- Sound Effects -->
+<audio id="popSound" src="pop.mp3"></audio>
+<audio id="boomSound" src="bomb.mp3"></audio>
+
+<script>
+  const grid = document.getElementById('grid');
+  const message = document.getElementById('message');
+  const restartBtn = document.getElementById('restart');
+  const popSound = document.getElementById('popSound');
+  const boomSound = document.getElementById('boomSound');
+
+  const totalBubbles = 36;
+  const trapCount = 9;
+  let trapIndexes = new Set();
+  let gameOver = false;
+
+  function setupGame() {
+    grid.innerHTML = '';
+    message.textContent = '';
+    restartBtn.style.display = 'none';
+    gameOver = false;
+
+    // Generate new trap positions
+    trapIndexes = new Set();
+    while (trapIndexes.size < trapCount) {
+      trapIndexes.add(Math.floor(Math.random() * totalBubbles));
+    }
+
+    for (let i = 0; i < totalBubbles; i++) {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.dataset.index = i;
+      grid.appendChild(bubble);
+
+      bubble.addEventListener('click', () => {
+  bubble.style.backgroundImage = "url('popped.png')"; // a deflated image
+
+        const index = parseInt(bubble.dataset.index);
+
+        if (trapIndexes.has(index)) {
+          // Burst all trap bubbles
+          trapIndexes.forEach(trapIndex => {
+            const trapBubble = document.querySelector(`.bubble[data-index="${trapIndex}"]`);
+            if (trapBubble) {
+              trapBubble.classList.add('trap');
+              trapBubble.textContent = '💣';
+            }
+          });
+
+          boomSound.currentTime = 0;
+          boomSound.play();
+          message.textContent = '💣 Game Over: You’ve been eliminated!';
+          gameOver = true;
+          disableAllBubbles();
+          restartBtn.style.display = 'inline-block';
+        } else {
+          bubble.classList.add('popped');
+    bubble.backgroundImage = "url('popped.png')"; // change to popped image
+    popSound.currentTime = 0;
+    popSound.play();
+        }
+      });
+    }
+  }
+
+  function disableAllBubbles() {
+    const all = document.querySelectorAll('.bubble');
+    all.forEach(b => b.classList.add('popped'));
+  }
+
+  restartBtn.addEventListener('click', setupGame);
+
+  // Start on load
+  setupGame();
+</script>
+
+
+</body>
+</html>
